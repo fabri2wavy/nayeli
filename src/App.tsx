@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { AUTH_CONFIG, MUSIC_CONFIG } from "./data/memoriesData";
+import { AUTH_CONFIG, MUSIC_CONFIG, CINEMA_GIFT_CONFIG } from "./data/memoriesData";
 import { LockScreen } from "./components/LockScreen";
+import { GiftReveal } from "./components/GiftReveal";
 import { FloatingMusicPlayer } from "./components/FloatingMusicPlayer";
 import { PrologueSection } from "./components/PrologueSection";
 import { TimelineSection } from "./components/TimelineSection";
@@ -10,15 +11,22 @@ import { FinalRingLetter } from "./components/FinalRingLetter";
 
 export function App() {
   const [isUnlocked, setIsUnlocked] = useState<boolean>(false);
+  const [showGift, setShowGift] = useState<boolean>(false);
+  const [giftDismissed, setGiftDismissed] = useState<boolean>(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Revisar localStorage al cargar por si ya abrió la cápsula antes
+  // Revisar localStorage al cargar
   useEffect(() => {
     try {
       const saved = localStorage.getItem(AUTH_CONFIG.storageKey);
       if (saved === "true") {
         setIsUnlocked(true);
+      }
+
+      // Si el regalo de cine está habilitado, mostrarlo
+      if (CINEMA_GIFT_CONFIG.enabled && saved === "true") {
+        setShowGift(true);
       }
     } catch {
       // Ignorar si localStorage está restringido
@@ -48,7 +56,6 @@ export function App() {
         setIsMusicPlaying(true);
       })
       .catch(() => {
-        // Si aún no se colocó /cancion.mp3 en public/, mantenemos el estado listo
         setIsMusicPlaying(false);
       });
   };
@@ -78,7 +85,20 @@ export function App() {
       // Ignorar errores de almacenamiento
     }
     setIsUnlocked(true);
+
+    // Si el regalo está activo, mostrarlo en lugar de ir directo a la cápsula
+    if (CINEMA_GIFT_CONFIG.enabled) {
+      setShowGift(true);
+    } else {
+      startMusic();
+    }
+  };
+
+  const handleGiftDismissed = () => {
+    setShowGift(false);
+    setGiftDismissed(true);
     startMusic();
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleLockCapsule = () => {
@@ -89,6 +109,8 @@ export function App() {
     }
     pauseMusic();
     setIsUnlocked(false);
+    setShowGift(false);
+    setGiftDismissed(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -99,12 +121,26 @@ export function App() {
     }
   };
 
+  // Determinar qué pantalla mostrar
+  const showGiftScreen = isUnlocked && showGift && CINEMA_GIFT_CONFIG.enabled && !giftDismissed;
+  const showCapsule = isUnlocked && !showGiftScreen;
+
   return (
     <div className="min-h-screen w-full paper-grain text-[#2C221E] relative selection:bg-[#D4C3B3]/50">
       <AnimatePresence mode="wait">
         {!isUnlocked ? (
           <LockScreen key="lock-screen" onUnlock={handleUnlock} />
-        ) : (
+        ) : showGiftScreen ? (
+          <motion.div
+            key="gift-screen"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <GiftReveal onContinueToCapsule={handleGiftDismissed} />
+          </motion.div>
+        ) : showCapsule ? (
           <motion.main
             key="capsule-content"
             initial={{ opacity: 0 }}
@@ -125,7 +161,7 @@ export function App() {
             {/* Divisor sutil */}
             <div className="max-w-xs mx-auto h-[1px] bg-gradient-to-r from-transparent via-[#E2D9C8] to-transparent" />
 
-            {/* Pantalla 3: Los 12 Días (Línea de Tiempo de Videos 9:16) */}
+            {/* Pantalla 3: Los 11 Días (Línea de Tiempo de Videos 9:16) */}
             <TimelineSection onVideoPlay={pauseMusic} />
 
             {/* Divisor sutil */}
@@ -140,7 +176,7 @@ export function App() {
             {/* Pantalla 5: El Cierre y El Anillo (Epílogo + Generador QR) */}
             <FinalRingLetter onLockCapsule={handleLockCapsule} />
           </motion.main>
-        )}
+        ) : null}
       </AnimatePresence>
     </div>
   );

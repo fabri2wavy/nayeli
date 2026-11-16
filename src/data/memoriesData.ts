@@ -227,7 +227,34 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
   },
 ];
 
-// 6. LA CARTA FINAL Y EL ANILLO (PANTALLA 5)
+// 6. REGALO SORPRESA — ENTRADA DE CINE (Se muestra al volver a escanear el QR)
+export const CINEMA_GIFT_CONFIG = {
+  enabled: true, // Pon en false cuando quieras desactivar el regalo y volver a la cápsula normal
+  storageKey: "nayeli_cinema_gift_opened_v1",
+  movie: "Los Juegos del Hambre: Amanecer en la Cosecha",
+  cinema: "Multicine — La Paz, Av. Arce",
+  date: "Jueves 19 de Noviembre, 2026",
+  time: "17:00 hrs",
+  room: "Sala 15 PLUS",
+  reference: "26-HCSI-W-1532924",
+  ticketInfoImage: "/ticket-info.png",
+  ticketQrImage: "/ticket-qr.png",
+  ticketUrl: "https://www.multicine.com.bo/reservation_details/r-17294256afb49a0560c79.69102981",
+  giftTeaser: "Tu cápsula tiene un detalle esperándote...",
+  openButtonText: "Abrir regalo",
+  note: {
+    salutation: "Nayeli,",
+    paragraphs: [
+      "Sé que acordamos alejarnos y estar en silencio, y lo respeto con todo el corazón. Pero se viene este jueves y no podía permitir que te perdieras el estreno de tu película favorita que esperabas por mucho.",
+      "Esta entrada es solo para ti. No es para vernos, no es una excusa para hablar, ni espero que me respondas o que me des las gracias. Mi único deseo es que vayas, te compres tus pipocas saladas favoritas, y pases una tarde increíble siendo feliz.",
+      "Disfruta mucho tu estreno.",
+    ],
+    closing: "Todos los dias, todo el dia.",
+  },
+  continueButtonText: "Ver mi cápsula de recuerdos",
+};
+
+// 7. LA CARTA FINAL Y EL ANILLO (PANTALLA 5)
 export const FINAL_LETTER_CONFIG = {
   sectionTag: "Epílogo • El Anillo",
   title: "El significado de lo que hoy tienes en tus manos",
