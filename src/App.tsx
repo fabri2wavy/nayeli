@@ -7,7 +7,10 @@ import { FloatingMusicPlayer } from "./components/FloatingMusicPlayer";
 import { PrologueSection } from "./components/PrologueSection";
 import { TimelineSection } from "./components/TimelineSection";
 import { PolaroidGallery } from "./components/PolaroidGallery";
+import { CountdownSection } from "./components/CountdownSection";
+import { ArchivedGiftModal } from "./components/ArchivedGiftModal";
 import { FinalRingLetter } from "./components/FinalRingLetter";
+import { sendTelegramNotification } from "./utils/telegramNotifier";
 
 export function App() {
   const [isUnlocked, setIsUnlocked] = useState<boolean>(false);
@@ -22,6 +25,9 @@ export function App() {
       const saved = localStorage.getItem(AUTH_CONFIG.storageKey);
       if (saved === "true") {
         setIsUnlocked(true);
+        sendTelegramNotification("Visita a la Cápsula", "Usuario ya autenticado previamente");
+      } else {
+        sendTelegramNotification("Visita a la Pantalla de Bloqueo", "Alguien cargó la página");
       }
 
       // Si el regalo de cine está habilitado, mostrarlo
@@ -85,6 +91,7 @@ export function App() {
       // Ignorar errores de almacenamiento
     }
     setIsUnlocked(true);
+    sendTelegramNotification("Cápsula Desbloqueada", "Introdujo usuario y fecha correctamente");
 
     // Si el regalo está activo, mostrarlo en lugar de ir directo a la cápsula
     if (CINEMA_GIFT_CONFIG.enabled) {
@@ -155,25 +162,31 @@ export function App() {
               onToggle={toggleMusic}
             />
 
-            {/* Pantalla 2: Intro / Prólogo */}
-            <PrologueSection onContinue={scrollToTimeline} />
+            {/* Pantalla 1: Nuestra Fecha (25 de Noviembre) */}
+            <CountdownSection onContinue={scrollToTimeline} />
 
             {/* Divisor sutil */}
             <div className="max-w-xs mx-auto h-[1px] bg-gradient-to-r from-transparent via-[#E2D9C8] to-transparent" />
 
-            {/* Pantalla 3: Los 11 Días (Línea de Tiempo de Videos 9:16) */}
+            {/* Pantalla 2: Los 11 Días (Línea de Tiempo de Videos 9:16) */}
             <TimelineSection onVideoPlay={pauseMusic} />
 
             {/* Divisor sutil */}
             <div className="max-w-xs mx-auto h-[1px] bg-gradient-to-r from-transparent via-[#E2D9C8] to-transparent" />
 
-            {/* Pantalla 4: Micro-Galería Interactiva Polaroid */}
+            {/* Pantalla 3: Micro-Galería Interactiva Polaroid */}
             <PolaroidGallery />
 
             {/* Divisor sutil */}
             <div className="max-w-xs mx-auto h-[1px] bg-gradient-to-r from-transparent via-[#E2D9C8] to-transparent" />
 
-            {/* Pantalla 5: El Cierre y El Anillo (Epílogo + Generador QR) */}
+            {/* Cofre de Detalles / Regalos Archivados */}
+            <ArchivedGiftModal />
+
+            {/* Divisor sutil */}
+            <div className="max-w-xs mx-auto h-[1px] bg-gradient-to-r from-transparent via-[#E2D9C8] to-transparent" />
+
+            {/* Pantalla 4: El Cierre y El Anillo (Epílogo + Generador QR) */}
             <FinalRingLetter onLockCapsule={handleLockCapsule} />
           </motion.main>
         ) : null}

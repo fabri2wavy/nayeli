@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Play, Sparkles, Clock, Film, X, ExternalLink } from "lucide-react";
 import { TWELVE_DAYS_VIDEOS, DayVideo } from "../data/memoriesData";
 import { resolveVideoSource, getDriveEmbedUrl } from "../utils/driveHelper";
+import { sendTelegramNotification } from "../utils/telegramNotifier";
 
 interface TimelineSectionProps {
   onVideoPlay: () => void;
@@ -17,6 +18,7 @@ export const TimelineSection: React.FC<TimelineSectionProps> = ({ onVideoPlay })
     setActiveVideoId(day.id);
     setActivePart(part);
     onVideoPlay(); // Pausa automáticamente la música de fondo (/cancion.mp3)
+    sendTelegramNotification("Reproduciendo Video", `Día ${day.dayNumber} - Parte ${part}: ${day.title}`);
   };
 
   const handleCloseVideo = () => {

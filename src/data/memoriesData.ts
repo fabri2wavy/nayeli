@@ -227,9 +227,9 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
   },
 ];
 
-// 6. REGALO SORPRESA — ENTRADA DE CINE (Se muestra al volver a escanear el QR)
+// 6. REGALO SORPRESA — ENTRADA DE CINE (Archivado en el cofre de recuerdos)
 export const CINEMA_GIFT_CONFIG = {
-  enabled: true, // Pon en false cuando quieras desactivar el regalo y volver a la cápsula normal
+  enabled: false, // En false para que entre directamente a la cápsula principal
   storageKey: "nayeli_cinema_gift_opened_v1",
   movie: "Los Juegos del Hambre: Amanecer en la Cosecha",
   cinema: "Multicine — La Paz, Av. Arce",
@@ -254,7 +254,19 @@ export const CINEMA_GIFT_CONFIG = {
   continueButtonText: "Ver mi cápsula de recuerdos",
 };
 
-// 7. LA CARTA FINAL Y EL ANILLO (PANTALLA 5)
+// 7. CUENTA REGRESIVA Y NOTA ESPECIAL DEL 25
+export const SPECIAL_DATE_CONFIG = {
+  enabled: true,
+  // 25 de Noviembre de 2026 a las 00:00 (Hora Bolivia: UTC-4)
+  targetDate: "2026-11-25T00:00:00-04:00",
+  tag: "25 de Noviembre • Nuestra Fecha",
+  beforeTitle: "Falta poco para el 25...",
+  beforeNote: "Aunque hoy los días tengan otro ritmo y estemos en silencio, el 25 siempre tendrá su propio lugar en mi memoria. Solo quería que supieras que no lo olvido.",
+  arrivedTitle: "Hoy es 25...",
+  arrivedNote: "Un mes más desde aquel día en que todo empezó. No necesito decir mucho más: gracias por todo lo que fuimos y por cada recuerdo que guardo con cariño. Te deseo un día bonito y en paz.",
+};
+
+// 8. LA CARTA FINAL Y EL ANILLO (PANTALLA 5)
 export const FINAL_LETTER_CONFIG = {
   sectionTag: "Epílogo • El Anillo",
   title: "El significado de lo que hoy tienes en tus manos",

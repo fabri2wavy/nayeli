@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Gift, Sparkles, MapPin, Clock, Armchair, Film, ChevronDown, Download, ExternalLink } from "lucide-react";
 import { CINEMA_GIFT_CONFIG } from "../data/memoriesData";
+import { sendTelegramNotification } from "../utils/telegramNotifier";
 
 interface GiftRevealProps {
   onContinueToCapsule: () => void;
@@ -13,6 +14,7 @@ export const GiftReveal: React.FC<GiftRevealProps> = ({ onContinueToCapsule }) =
 
   const handleOpen = () => {
     setIsOpened(true);
+    sendTelegramNotification("Regalo Abierto", "Abrió el sobre del ticket de cine");
     try {
       localStorage.setItem(cfg.storageKey, "true");
     } catch {
@@ -21,6 +23,7 @@ export const GiftReveal: React.FC<GiftRevealProps> = ({ onContinueToCapsule }) =
   };
 
   const handleDownloadTicket = () => {
+    sendTelegramNotification("Descarga de Ticket", "Tocó guardar QR del ticket");
     // Abre la imagen del QR en nueva pestaña para que pueda guardarla
     window.open(cfg.ticketQrImage, "_blank");
   };
